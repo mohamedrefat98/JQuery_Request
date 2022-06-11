@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>doc</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <form action="">
+        <input type="text" name="" id="">
+        <textarea name="" id="" rows="7"></textarea>
+        <button id="submit">Submit</button>
+        <button id="cancel">Cancel</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        var objId =window.sessionStorage.getItem('objId');
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: `https://jsonplaceholder.typicode.com/posts/${objId}`,
+            }).done(function (data, status) {
+                    $("input").val(data.title);
+                    $("textarea").val(data.body);
+                    $("#submit").click(function () {
+                        var confim = confirm("DO YOU WANT TO CHANGE DATA?");
+                        if (confim) {
+                            data.title = $("input").val();
+                            data.body = $("textarea").val();
+                            $.ajax({
+                                type: "UPDATE",
+                                data: JSON.stringify(window.data),
+                                url: `https://jsonplaceholder.typicode.com/posts/${objId}`,
+                            }).done(function (data, status) {
+                                console.log(data.status);
+                                    if (data.status == "201") {
+                                        alert("DONE!");
+                                        window.close();
+                                    }
+                                    }).fail(function (data) {
+                                        alert(`ERROR ${data.status} ${data.statusText}`);
+                                    });
+                            }
+                        });
+                    }).fail(function (data) {
+                        alert(`ERROR ${data.status} ${data.statusText}`);
+                    });
+                    
+                });
+                $("#cancel").click(() => {
+                    window.location.href='index.html';
+                });
+
+    </script>
+</body>
+</html>
